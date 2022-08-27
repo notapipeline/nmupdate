@@ -101,15 +101,16 @@ func configure(ctx context.Context, filename string, cnf *chan conf) {
 				for {
 					if _, err := os.Stat(filename); err == nil {
 						break
-					} else {
-						log.Println(err)
-						if i == MAX_TRIES {
-							data, _ := yaml.Marshal(&config)
-							ioutil.WriteFile(filename, data, 0)
-							break
-						}
+					}
+					if i == MAX_TRIES {
+						// If we got here and the config wasn't recreted
+						// create it with the last known config values
+						data, _ := yaml.Marshal(&config)
+						ioutil.WriteFile(filename, data, 0)
+						break
 					}
 					i++
+					time.Sleep(1 * time.Millisecond)
 				}
 				n.Stop(c)
 				if err := n.Watch(filename, c, events); err != nil {
