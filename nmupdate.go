@@ -68,7 +68,7 @@ func load(filename string) conf {
 // Listen for all filesystem events for the config file
 // and reload it if it changes
 func configure(ctx context.Context, filename string, cnf *chan conf) {
-	events := n.Create | n.Remove | n.Write | n.Rename | n.InAccess | n.InModify | n.InAttrib | n.InCloseWrite | n.InMovedFrom | n.InMovedTo | n.InCreate | n.InDelete | n.InDeleteSelf | n.InMoveSelf
+	events := n.Remove | n.Write | n.InModify | n.InCloseWrite
 	c := make(chan n.EventInfo, 1)
 	if err := n.Watch(filename, c, events); err != nil {
 		log.Fatal(err)
